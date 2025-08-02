@@ -1,0 +1,7 @@
+webhook_url: https://example.com:8080/github-release # a public IP
+webhook_port: 8080
+github_token:
+repo_owner: owner
+repo_name: repo
+exclude_folders: # folders that will not be deleted or updated
+  - _iainternal

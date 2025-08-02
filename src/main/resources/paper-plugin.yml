@@ -7,3 +7,7 @@ load: STARTUP
 authors: [ Misieur ]
 description: A plugin to synchronize your ItemsAdder contents folder with a github repo
 website: https://misieur.tech
+ItemsAdder:
+  load: AFTER
+  required: true
+  join-classpath: false
