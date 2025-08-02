@@ -1,0 +1,9 @@
+name: ItemsAdderContentSynchronizer
+version: '1.0-SNAPSHOT'
+main: dev.misieur.iasync.ItemsAdderContentSynchronizer
+api-version: '1.20'
+prefix: [ ItemsAdderContentSynchronizer ]
+load: STARTUP
+authors: [ Misieur ]
+description: A plugin to synchronize your ItemsAdder contents folder with a github repo
+website: https://misieur.tech
