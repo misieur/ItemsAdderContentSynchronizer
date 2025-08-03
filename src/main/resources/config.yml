@@ -1,8 +1,8 @@
-webhook_url: https://example.com:8080/github-release # a public IP
-webhook_port: 8080
+webhook_url: https://example.com:8080/github-release # a public IP to update your server as soon as a new release is published
+webhook_port: 8080 # the available port you want to use
 use_webhook: true # If false, the plugin will not use the webhook to update the content folder. You will have to restart the server to update it.
-github_token:
+github_token: # The GitHub that will be used to manage webhooks and download the releases
 repo_owner: owner
-repo_name: repo
+repo_name: repo # it can be private
 exclude_folders: # folders that will not be deleted or updated
-  - _iainternal
+  - _iainternal # You can also put '.idea' '.vscode' etc. if needed
