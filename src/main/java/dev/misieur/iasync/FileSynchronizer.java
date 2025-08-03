@@ -47,6 +47,12 @@ public class FileSynchronizer {
 
                     if (relativePath.isEmpty()) return;
 
+                    for (String excludedFolder : ItemsAdderContentSynchronizer.getExclude_folders()) {
+                        if (relativePath.startsWith(excludedFolder + "/") || relativePath.equals(excludedFolder)) {
+                            return;
+                        }
+                    }
+
                     try (InputStream inputStream = zip.getInputStream(entry)) {
                         File outFile = new File(contentFolder, relativePath);
                         if (entry.isDirectory()) {

@@ -69,46 +69,50 @@ public final class ItemsAdderContentSynchronizer extends JavaPlugin {
             return;
         }
 
-        // Create a new GitHub webhook (and delete existing ones with the same URL)
-        getLogger().info("Creating GitHub webhook...");
-        String secret = generateSecret();
-        webhookUrl = getConfig().getString("webhook_url");
-        exclude_folders = getConfig().getStringList("exclude_folders");
-        try {
-            WebhookManager.deleteWebhooksByUrl(githubToken, repoOwner, repoName, webhookUrl);
-            WebhookManager.createWebhook(githubToken, repoOwner, repoName, webhookUrl, secret);
-        } catch (IOException e) {
-            getLogger().severe("Failed to create GitHub webhook: " + e.getMessage());
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        if (getConfig().getBoolean("use_webhook", true)) {
+            // Create a new GitHub webhook (and delete existing ones with the same URL)
+            getLogger().info("Creating GitHub webhook...");
+            String secret = generateSecret();
+            webhookUrl = getConfig().getString("webhook_url");
+            exclude_folders = getConfig().getStringList("exclude_folders");
+            try {
+                WebhookManager.deleteWebhooksByUrl(githubToken, repoOwner, repoName, webhookUrl);
+                WebhookManager.createWebhook(githubToken, repoOwner, repoName, webhookUrl, secret);
+            } catch (IOException e) {
+                getLogger().severe("Failed to create GitHub webhook: " + e.getMessage());
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
 
-        // Start the webhook server
-        try {
-            server = HttpServer.create(new InetSocketAddress(port), 0);
-            server.createContext("/github-release", new WebhookHandler(secret, this, githubToken));
-            server.setExecutor(Executors.newSingleThreadExecutor());
-            server.start();
-            getLogger().info("Started GitHub webhook listener on http://*:" + port + "/github-release");
-        } catch (IOException e) {
-            getLogger().severe("Failed to start webhook server: " + e.getMessage());
+            // Start the webhook server
+            try {
+                server = HttpServer.create(new InetSocketAddress(port), 0);
+                server.createContext("/github-release", new WebhookHandler(secret, this, githubToken));
+                server.setExecutor(Executors.newSingleThreadExecutor());
+                server.start();
+                getLogger().info("Started GitHub webhook listener on http://*:" + port + "/github-release");
+            } catch (IOException e) {
+                getLogger().severe("Failed to start webhook server: " + e.getMessage());
+            }
         }
     }
 
     @Override
     public void onDisable() {
-        // Stop the webhook server
+        // Stop the webhook server if it exists
         if (server != null) {
             server.stop(0);
             getLogger().info("Webhook server stopped.");
         }
 
-        // Delete the GitHub webhook
-        try {
-            WebhookManager.deleteWebhooksByUrl(githubToken, repoOwner, repoName, webhookUrl);
-            getLogger().info("GitHub webhook deleted.");
-        } catch (IOException e) {
-            getLogger().severe("Failed to delete GitHub webhook: " + e.getMessage());
+        if (getConfig().getBoolean("use_webhook", true)) {
+            // Delete the GitHub webhook
+            try {
+                WebhookManager.deleteWebhooksByUrl(githubToken, repoOwner, repoName, webhookUrl);
+                getLogger().info("GitHub webhook deleted.");
+            } catch (IOException e) {
+                getLogger().severe("Failed to delete GitHub webhook: " + e.getMessage());
+            }
         }
         getLogger().info("ItemsAdderContentSynchronizer disabled.");
     }

@@ -1,5 +1,6 @@
 webhook_url: https://example.com:8080/github-release # a public IP
 webhook_port: 8080
+use_webhook: true # If false, the plugin will not use the webhook to update the content folder. You will have to restart the server to update it.
 github_token:
 repo_owner: owner
 repo_name: repo
