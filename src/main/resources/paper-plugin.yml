@@ -1,5 +1,5 @@
 name: ItemsAdderContentSynchronizer
-version: '1.0-SNAPSHOT'
+version: '1.0.1'
 main: dev.misieur.iasync.ItemsAdderContentSynchronizer
 api-version: '1.20'
 prefix: [ ItemsAdderContentSynchronizer ]
